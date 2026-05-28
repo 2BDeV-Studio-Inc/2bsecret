@@ -1,0 +1,25 @@
+[package]
+name = "twobsecret"
+version = "0.3.0"
+edition = "2021"
+authors = ["2BDeV_Studio <info@2bdevon.top>"]
+license = "MIT"
+
+[build-dependencies]
+winres = "0.1"
+
+[dependencies]
+eframe = "0.27"
+egui = "0.27"
+aes-gcm-siv = "0.11"
+anyhow = "1"
+base64 = "0.22"
+rand = "0.8"
+rfd = "0.14"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+windows-dpapi = "0.2"
+x25519-dalek = { version = "2.0", features = ["static_secrets"] }
+zeroize = "1.7"
+hmac = "0.12.0"
