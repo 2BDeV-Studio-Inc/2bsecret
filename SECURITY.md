@@ -6,8 +6,8 @@ Az alábbi verziók kapnak jelenleg biztonsági frissítéseket:
 
 | Verzió                    | Támogatott |
 | ------------------------- | ---------- |
-| 3.5.0                     | ✅         |
-| 3.0.0                     | ✅         |
+| 0.4.0                     | ✅         |
+| 0.3.0                     | ✅         |
 | Python alapú alkalmazás   | ❌         |
 
 ## Sérülékenység jelentése
