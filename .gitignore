@@ -1,0 +1,26 @@
+# Rust build artifacts
+/target/
+Cargo.lock
+
+# IDE / Editor files
+.vs/
+.vscode/
+
+# Windows specific
+*.exe
+*.msi
+*.dll
+*.pdb
+*.ilk
+
+# Temporary files
+*.tmp
+*.log
+
+# System files
+Thumbs.db
+Desktop.ini
+
+# Wix / installer output (optional)
+wix/*.msi
+wix/*.wixpdb

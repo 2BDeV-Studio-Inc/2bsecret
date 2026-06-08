@@ -1,0 +1,43 @@
+[package]
+name = "twobsecret"
+version = "0.4.0"
+edition = "2021"
+authors = ["2BDeV_Studio <info@2bdevon.top>"]
+license = "MIT"
+
+[build-dependencies]
+winres = "0.1"
+
+[dependencies]
+eframe = "0.27"
+egui = "0.27"
+aes-gcm-siv = "0.11"
+anyhow = "1"
+base64 = "0.22"
+dirs = "5"
+hkdf = "0.12"
+rand = "0.8"
+rfd = "0.14"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+secrecy = "0.8"
+x25519-dalek = { version = "2.0", features = ["static_secrets"] }
+zeroize = { version = "1.7", features = ["derive"] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-dpapi = "0.2"
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+keyring = "3"
+
+[dev-dependencies]
+proptest = "1"
+tempfile = "3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

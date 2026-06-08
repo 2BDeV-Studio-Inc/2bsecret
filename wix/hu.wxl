@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="hu-HU" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="LanguageCode">1038</String>
+  <String Id="EulaPath">wix\eula_hu.rtf</String>
+</WixLocalization>
