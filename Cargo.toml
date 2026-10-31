@@ -1,8 +1,8 @@
 [package]
 name = "twobsecret"
-version = "0.4.0"
+version = "0.6.0"
 edition = "2021"
-authors = ["2BDeV_Studio <info@2bdevon.top>"]
+authors = ["2BDeV_Studio <contact@2bdevon.top>"]
 license = "MIT"
 
 [build-dependencies]
@@ -12,9 +12,11 @@ winres = "0.1"
 eframe = "0.27"
 egui = "0.27"
 aes-gcm-siv = "0.11"
+argon2 = "0.5"
+ml-kem = { version = "0.3", features = ["getrandom", "zeroize"] }
 anyhow = "1"
 base64 = "0.22"
-dirs = "5"
+dirs = "6"
 hkdf = "0.12"
 rand = "0.8"
 rfd = "0.14"
@@ -24,16 +26,82 @@ sha2 = "0.10"
 secrecy = "0.8"
 x25519-dalek = { version = "2.0", features = ["static_secrets"] }
 zeroize = { version = "1.7", features = ["derive"] }
+ed25519-dalek = { version = "2", features = ["zeroize", "rand_core"] }
+ml-dsa = { version = "0.1.1", features = ["zeroize", "rand_core"] }
+
+[package.metadata.deb]
+maintainer = "2BDeV Studio <info@2bdevon.top>"
+copyright = "2025-2026, 2BDeV Studio"
+license-file = ["LICENSE", "4"]
+extended-description = """\
+2BSecret is a zero-trust based offline encryption ecosystem. This package \
+provides the GUI application for file encryption using a hybrid X25519 + ML-KEM-768 key \
+exchange, AES-256-GCM-SIV, and hybrid Ed25519 + ML-DSA-65 signatures."""
+depends = "$auto, libxcb-render0, libxcb-shape0, libxcb-xfixes0, libxkbcommon"
+section = "utils"
+priority = "optional"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 windows-dpapi = "0.2"
 
-[target.'cfg(not(target_os = "windows"))'.dependencies]
-keyring = "3"
+# FONTOS: a `keyring` cratenak NINCS "default" feature-listaja — a puszta
+# `keyring = "3"` (feature-ek nelkul) sem Linuxon, sem macOS-en NEM linkel be
+# semmilyen platform-backendet (ezt a projekt sajat Cargo.lock-ja is mutatta:
+# a keyring csomag ott kizarolag `log` + `zeroize`-t hozott magaval). Ez azt
+# jelenti, hogy a Realeb 2. vedelmi reteg (OS-szintu tarolas) Linuxon/macOS-en
+# eddig futasidoben elhasalt — a `protect_private_key`/`get_or_create_keyring_master_key`
+# hivasok soha nem tudtak sikeresen elerni egy tenyleges credential store-t.
+# Az alabbi explicit feature-valasztas platformonkent bekapcsolja a megfelelo,
+# perzisztens backendet, `crypto-rust`-tal (tiszta Rust kriptó, NINCS szukseg
+# OpenSSL-re / libssl3-ra a rendszeren).
+[target.'cfg(target_os = "linux")'.dependencies]
+keyring = { version = "3.6.3", default-features = false, features = ["linux-native-sync-persistent", "crypto-rust"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+keyring = { version = "3.6.3", default-features = false, features = ["apple-native"] }
 
 [dev-dependencies]
 proptest = "1"
 tempfile = "3"
+
+# Debug/teszt buildben a nehéz kriptográfia (Argon2id 256 MiB) optimalizálatlanul
+# tízszer-százszor lassabb lenne, és a tesztek percekig futnának. Ez csak a
+# fejlesztői és teszt profilt érinti, a release build nem változik.
+[profile.dev.package.argon2]
+opt-level = 3
+
+[profile.dev.package.blake2]
+opt-level = 3
+
+[profile.dev.package.ml-dsa]
+opt-level = 3
+
+[profile.dev.package.ml-kem]
+opt-level = 3
+
+[profile.dev.package.sha3]
+opt-level = 3
+
+[profile.dev.package.shake]
+opt-level = 3
+
+[profile.dev.package.module-lattice]
+opt-level = 3
+
+[profile.dev.package.curve25519-dalek]
+opt-level = 3
+
+[profile.dev.package.aes-gcm-siv]
+opt-level = 3
+
+[profile.dev.package.aes]
+opt-level = 3
+
+[profile.dev.package.polyval]
+opt-level = 3
+
+[profile.dev.package.sha2]
+opt-level = 3
 
 [profile.release]
 opt-level = 3
